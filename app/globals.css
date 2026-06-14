@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+/* Class-based dark mode (toggled by adding `.dark` to <html>). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ----------------------------------------------------------------------- */
+/*  Midnight Editorial palette — now THEME-AWARE.                           */
+/*  @theme registers the tokens (and generates utilities like              */
+/*  `bg-bg-primary`, `text-text-secondary`, `border-border`). The values   */
+/*  here are the LIGHT-mode defaults; `.dark` below overrides the same CSS  */
+/*  variables, so every utility automatically responds to the theme.       */
+/* ----------------------------------------------------------------------- */
+@theme {
+  /* Light mode (defaults) */
+  --color-bg-primary: #fafaf9;   /* page background (zinc-50)   */
+  --color-bg-secondary: #ffffff; /* cards / nav                 */
+  --color-bg-tertiary: #f4f4f5;  /* chips, icon tiles (zinc-100)*/
+
+  --color-border: #e4e4e7;       /* zinc-200 */
+  --color-border-hover: #d4d4d8; /* zinc-300 */
+
+  --color-text-primary: #18181b;   /* zinc-900 */
+  --color-text-secondary: #52525b; /* zinc-600 */
+  --color-text-muted: #a1a1aa;     /* zinc-400 */
+
+  /* Accent + status work in both modes, so they stay constant. */
+  --color-accent: #f5a623;
+  --color-accent-hover: #e89610;
+  --color-accent-subtle: #f5a62315;
+  --color-success: #10b981;
+
+  /* Text color that always sits on the amber accent (stays dark both modes). */
+  --color-on-accent: #0a0a0b;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Animations */
+  --animate-fade-in-up: fade-in-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.8s ease both;
+}
+
+/* Dark mode overrides — the original Midnight Editorial values. */
+.dark {
+  --color-bg-primary: #0a0a0b;
+  --color-bg-secondary: #141416;
+  --color-bg-tertiary: #1c1c1f;
+
+  --color-border: #27272a;
+  --color-border-hover: #3f3f46;
+
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #52525b;
+}
+
+/* Keyframes (Tailwind v4 picks these up for the --animate-* tokens) */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Subtle expanding amber ring behind the login logo. */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  70% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.25);
+    opacity: 0;
+  }
+}
+
+/* Default page background + text from the theme-aware tokens. */
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Crisper text rendering + buttery smooth anchor scrolling. */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth, non-jarring theme switching + smooth anchor scrolling. */
+html {
+  scroll-behavior: smooth;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+/* ----------------------------------------------------------------------- */
+/*  Accessibility: respect users who prefer reduced motion.                */
+/*  Disables smooth scroll, CSS animations/transitions, and the custom     */
+/*  cursor (restores the native cursor in the hero).                        */
+/* ----------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Keep the native cursor even inside the hero. */
+  .hero-cursor-none,
+  .hero-cursor-none * {
+    cursor: auto !important;
+  }
+}
+
+/* Staggered entrance helpers for the hero. */
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+.animate-delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* ----------------------------------------------------------------------- */
+/*  Nav link underline-draw (ANIMATION 3)                                  */
+/*  Left-to-right "drawing" line via ::after, animating transform/scale.   */
+/* ----------------------------------------------------------------------- */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background-color: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-out;
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Hide the native cursor only inside the hero (custom cursor active). */
+.hero-cursor-none,
+.hero-cursor-none * {
+  cursor: none;
+}
+
